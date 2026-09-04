@@ -15,6 +15,7 @@ private val Context.dataStore by preferencesDataStore(name = "recordatorios_pref
 class GestorPersistencia(private val context: Context) {
     private val GSON = Gson()
     private val CLAVE_RECORDATORIOS = stringPreferencesKey("lista_recordatorios")
+    private val CLAVE_PRIMERA_VEZ = androidx.datastore.preferences.core.booleanPreferencesKey("primera_vez")
 
     val recordatoriosFlow: Flow<List<Recordatorio>> = context.dataStore.data.map { preferencias ->
         val json = preferencias[CLAVE_RECORDATORIOS] ?: ""
@@ -23,6 +24,16 @@ class GestorPersistencia(private val context: Context) {
         } else {
             val tipo = object : TypeToken<List<Recordatorio>>() {}.type
             GSON.fromJson(json, tipo)
+        }
+    }
+
+    val esPrimeraVezFlow: Flow<Boolean> = context.dataStore.data.map { preferencias ->
+        preferencias[CLAVE_PRIMERA_VEZ] ?: true
+    }
+
+    suspend fun marcarComoIniciado() {
+        context.dataStore.edit { preferencias ->
+            preferencias[CLAVE_PRIMERA_VEZ] = false
         }
     }
 

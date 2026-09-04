@@ -10,12 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,12 +43,36 @@ fun PantallaAutenticacion(
     val contraseñaValida = contraseña.length >= 8
     val formularioValido = correoValido && contraseñaValida && aceptoTerminos
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = alCambiarTema,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface, CircleShape)
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), CircleShape)
+                ) {
+                    Icon(
+                        imageVector = if (esTemaOscuro) Icons.Default.LightMode else Icons.Default.DarkMode,
+                        contentDescription = "Cambiar tema",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
+                .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -235,23 +254,6 @@ fun PantallaAutenticacion(
                     color = if (formularioValido) Color.White else MoradoPrimario.copy(alpha = 0.5f)
                 )
             }
-        }
-
-        // Botón de cambio de tema en la esquina superior derecha
-        IconButton(
-            onClick = alCambiarTema,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .statusBarsPadding()
-                .padding(top = 8.dp, end = 16.dp)
-                .background(MaterialTheme.colorScheme.surface, CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), CircleShape)
-        ) {
-            Icon(
-                imageVector = if (esTemaOscuro) Icons.Default.LightMode else Icons.Default.DarkMode,
-                contentDescription = "Cambiar tema",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
         }
     }
 }

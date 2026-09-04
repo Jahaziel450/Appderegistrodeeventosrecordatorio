@@ -39,6 +39,28 @@ fun PantallaPrincipal(
     var recordatorioParaEliminar by remember { mutableStateOf<Recordatorio?>(null) }
 
     Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                IconButton(
+                    onClick = alCambiarTema,
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface, CircleShape)
+                        .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), CircleShape)
+                ) {
+                    Icon(
+                        imageVector = if (esTemaOscuro) Icons.Default.LightMode else Icons.Default.DarkMode,
+                        contentDescription = "Cambiar tema",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = alAgregar,
@@ -50,61 +72,41 @@ fun PantallaPrincipal(
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 24.dp)
+        ) {
+            Text(
+                text = "EQUIPO 4",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = MoradoPrimario
+            )
+            Text(
+                text = "Mis recordatorios",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "${recordatorios.size} recordatorios",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "EQUIPO 4",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MoradoPrimario
-                )
-                Text(
-                    text = "Mis recordatorios",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${recordatorios.size} recordatorios",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(bottom = 80.dp)
-                ) {
-                    items(recordatorios, key = { it.id }) { recordatorio ->
-                        TarjetaRecordatorio(
-                            recordatorio = recordatorio,
-                            alEliminar = { recordatorioParaEliminar = recordatorio }
-                        )
-                    }
+                items(recordatorios, key = { it.id }) { recordatorio ->
+                    TarjetaRecordatorio(
+                        recordatorio = recordatorio,
+                        alEliminar = { recordatorioParaEliminar = recordatorio }
+                    )
                 }
-            }
-
-            // Botón de cambio de tema en la esquina superior derecha
-            IconButton(
-                onClick = alCambiarTema,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .statusBarsPadding()
-                    .padding(top = 8.dp, end = 16.dp)
-                    .background(MaterialTheme.colorScheme.surface, CircleShape)
-                    .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f), CircleShape)
-            ) {
-                Icon(
-                    imageVector = if (esTemaOscuro) Icons.Default.LightMode else Icons.Default.DarkMode,
-                    contentDescription = "Cambiar tema",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
             }
         }
 
